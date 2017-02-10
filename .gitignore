@@ -1,0 +1,9 @@
+# eclipse metadata #
+*/.metadata
+.metadata
+
+.DS_Store
+*/.DS_Store
+
+# logs #
+.log
