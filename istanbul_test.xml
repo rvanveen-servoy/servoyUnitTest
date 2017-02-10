@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+
+<!-- Works with Ant 1.7.0 and higher -->
+<project basedir=".">
+
+    <target name="instrument_code" depends="clean_instrumented_workspace, instrument_workspace, servoy_parse_instrumented_workspace, clean_instrument_code"/>
+
+    <!-- clean the instrumented workspace -->
+    <target name="clean_instrumented_workspace" if="instrument_code_for_code_coverage_report">
+      <echo level="info" message="Using antRunner dir: ${antRunner.dir}"/>
+      <delete dir="${istanbul.temp.dir}"/>
+      <mkdir dir="${istanbul.temp.dir}"/>        <!-- instrumented files -->
+      <delete dir="${test.results.istanbul.dir}"/>
+      <mkdir dir="${test.results.istanbul.dir}"/>
+
+      <delete dir="${istanbul.instrumented.dir}"/>
+      <copy todir="${istanbul.instrumented.dir}">         <!--instrumented and parsed files -->
+        <fileset dir="${WORKSPACE}">
+        </fileset>
+      </copy>
+      <replace file="${istanbul.instrumented.dir}/BmaOne_test/bmaOne_test.js" token="___report_coverage___" value="${test.results.istanbul.dir}/coverage.json"/>
+      <!-- JF: The REPORT_COVERAGE variable is derived from baseDir in the porperties file. This dir apperantly has
+      backslashes, and JavaScript doesn't like them. Replacing them here was the easiest fix. -->
+      <replace file="${istanbul.instrumented.dir}/BmaOne_test/bmaOne_test.js" token="\" value="/"/>
+    </target>
+
+    <!-- instrument all code from workspace into the temp instrumented workspace-->
+    <target name="instrument_workspace" depends="clean_instrumented_workspace">
+      <echo level="info" message="instrumenting workspace ${WORKSPACE} into temp workspace ${istanbul.temp.dir}"/>
+      <echo level="info" message="Excluded in ant script: **svy**, **modUtils**, **mod_dialog**"/>
+      <echo level="info" message="Excluded by jenkins configuration : ${istanbul.exclude}"/>
+      <exec executable="cmd" failonerror="true">
+        <arg value="/c"/>
+        <arg value="istanbul"/>
+        <arg value="instrument"/>
+        <arg value="${WORKSPACE}"/>
+        <arg value="--output"/>
+        <arg value="${istanbul.temp.dir}"/>
+        <arg value="--preserve-comments"/>
+        <arg value="-x"/>
+        <arg value="**svy**"/>
+        <arg value="-x"/>
+        <arg value="**modUtils**"/>
+        <arg value="-x"/>
+        <arg value="**mod_dialog**"/>
+        <arg value="-x"/>
+        <arg value="${istanbul.exclude}"/>
+      </exec>
+    </target>
+
+    <!-- parse all the instrumented code from the temp instrumented workspace and save the modified instrumented file into the instrumented workspace-->
+    <target name="servoy_parse_instrumented_workspace" depends="instrument_workspace" if="instrument_code_for_code_coverage_report">
+      <echo level="info" message="parsing Servoy code in instrumented workspace ${istanbul.temp.dir}. Generate result into ${istanbul.instrumented.dir}"/>
+      <exec executable="cmd" failonerror="${always_fails_if_instrumentation_fails}">
+        <arg value="/c"/>
+        <arg value="node"/>
+        <arg value="${istanbul.dir}/ServoyParser.js"/>
+        <arg value="--d"/>
+        <arg value="${istanbul.instrumented.dir}"/>
+        <arg value="${istanbul.temp.dir}"/>
+        <arg value="--t"/>
+          <arg value="${instrument.test.solutions}"/>
+        <arg value="--x"/>
+          <arg value="${servoy.instrument.exclude}"/>
+        <arg value="--e"/>
+          <arg value="${always_fails_if_instrumentation_fails}"/>
+        <arg value="--i"/>
+          <arg value="${servoy.instrument.include}"/>
+      </exec>
+    </target>
+
+    <!-- clean the instrumented workspace -->
+    <target name="clean_instrument_code" depends="instrument_workspace, servoy_parse_instrumented_workspace">
+      <delete dir="${istanbul.temp.dir}"/>
+    </target>
+
+</project>
