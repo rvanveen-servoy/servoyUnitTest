@@ -6,9 +6,17 @@ height:480,
 partType:5,
 typeid:19,
 uuid:"051DDC6E-956C-42A7-8986-84351048E277"
+},
+{
+location:"26,32",
+size:"224,20",
+text:"svyUnitTest Module",
+transparent:true,
+typeid:7,
+uuid:"57A2929B-5410-440D-BA85-786348922F96"
 }
 ],
 name:"sampleForm",
-showInMenu:true,
+navigatorID:"-1",
 typeid:3,
 uuid:"A5B999E6-5A2E-41F5-AE68-1D06CEABAD06"

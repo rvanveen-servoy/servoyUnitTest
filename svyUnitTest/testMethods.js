@@ -19,3 +19,12 @@ function test_methodA_true() {
 	
 	jsunit.assertTrue(result);
 }
+
+/**
+ * @properties={typeid:24,uuid:"FBE5170B-AB2F-46CF-993A-3E95D76F915F"}
+ */
+function test_methodB() {
+	var result = scopes.methodsToTest.methodB();
+	
+	jsunit.assertTrue(result);
+}
