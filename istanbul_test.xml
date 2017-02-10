@@ -2,11 +2,11 @@
 
 <!-- Works with Ant 1.7.0 and higher -->
 <project basedir=".">
-
-    <target name="instrument_code" depends="clean_instrumented_workspace, instrument_workspace, servoy_parse_instrumented_workspace, clean_instrument_code"/>
+	
+    <target name="instrument_code" depends="load_properties, init_test, clean_instrumented_workspace, instrument_workspace, servoy_parse_instrumented_workspace, clean_instrument_code"/>
 
     <!-- clean the instrumented workspace -->
-    <target name="clean_instrumented_workspace" if="instrument_code_for_code_coverage_report">
+    <target name="clean_instrumented_workspace" depends="init_test">
       <echo level="info" message="Using antRunner dir: ${antRunner.dir}"/>
       <delete dir="${istanbul.temp.dir}"/>
       <mkdir dir="${istanbul.temp.dir}"/>        <!-- instrumented files -->
@@ -25,7 +25,7 @@
     </target>
 
     <!-- instrument all code from workspace into the temp instrumented workspace-->
-    <target name="instrument_workspace" depends="clean_instrumented_workspace">
+    <target name="instrument_workspace" depends="clean_instrumented_workspace, load_properties">
       <echo level="info" message="instrumenting workspace ${WORKSPACE} into temp workspace ${istanbul.temp.dir}"/>
       <echo level="info" message="Excluded in ant script: **svy**, **modUtils**, **mod_dialog**"/>
       <echo level="info" message="Excluded by jenkins configuration : ${istanbul.exclude}"/>
@@ -49,12 +49,12 @@
     </target>
 
     <!-- parse all the instrumented code from the temp instrumented workspace and save the modified instrumented file into the instrumented workspace-->
-    <target name="servoy_parse_instrumented_workspace" depends="instrument_workspace" if="instrument_code_for_code_coverage_report">
+    <target name="servoy_parse_instrumented_workspace" depends="instrument_workspace">
       <echo level="info" message="parsing Servoy code in instrumented workspace ${istanbul.temp.dir}. Generate result into ${istanbul.instrumented.dir}"/>
       <exec executable="cmd" failonerror="${always_fails_if_instrumentation_fails}">
         <arg value="/c"/>
         <arg value="node"/>
-        <arg value="${istanbul.dir}/ServoyParser.js"/>
+        <arg value="${servoy.parser}"/>
         <arg value="--d"/>
         <arg value="${istanbul.instrumented.dir}"/>
         <arg value="${istanbul.temp.dir}"/>
@@ -73,5 +73,66 @@
     <target name="clean_instrument_code" depends="instrument_workspace, servoy_parse_instrumented_workspace">
       <delete dir="${istanbul.temp.dir}"/>
     </target>
+	
+	<macrodef name="run-ng-client-tests">
+        <sequential>
+            <echo level="verbose">
+                *** Servoy Solution JS unit ng client tests ***
+            </echo>
+
+            <!-- Define a timeout so we know the test will finish eventually -->
+            <junit fork="yes" forkmode="once" timeout="${test.timeout}" dir="${servoy.app_server.dir}" haltonfailure="false" haltonerror="false" errorProperty="test.failed" failureProperty="test.failed" printsummary="on">
+                <jvmarg value="-XX:MaxPermSize=128m" />
+                <classpath refid="classpath.run_test" />
+
+                <!-- <sysproperty key="servoy.test.target-file-ext" value=".servoy" /> -->
+
+                <formatter type="brief" usefile="false" />
+                <formatter type="xml" />
+
+                <!-- formatter similar to type="xml" but it shows test suite hierarchy nicely, in a tree-like result xml - useful to nicely show the place where a test failed (solution/form...)
+                but this formatter is not included in ant yet - you would need to patch it yourself and integrate in ant lib from https://issues.apache.org/bugzilla/show_bug.cgi?id=48529
+                if you plan on using it, either comment out the simple "xml" formatter or add "extension" attribute to one of them so they don't get into conflicts when generating xmls -->
+                <!-- <formatter type="xml.suites" /> -->
+
+                <test name="com.servoy.automation.jsunit.smartclient.ServoyJSUnitTestRunner" todir="${test.results.junit.dir}" />
+            </junit>
+
+            <antcall target="create_test_report"/>
+
+            <!-- don't fail directly here so that test artifacts can be prepared for Jenkins before failing - and also allow any mobile tests to run -->
+           </sequential>
+    </macrodef>
+
+    <target name="create_test_report">
+        <junitreport todir="${test.results.junit.dir}">
+            <fileset dir="${test.results.junit.dir}">
+                <include name="TEST-*.xml" />
+            </fileset>
+            <report format="noframes" todir="${test.results.junit.dir}" />
+
+            <!-- report similar to format="noframes" but it shows test suite hierarchy nicely, in a tree-like result html - useful to nicely show the place where a test failed (solution/form...)
+            but this report is not included in ant yet - you would need to patch it yourself and integrate in ant lib from https://issues.apache.org/bugzilla/show_bug.cgi?id=48529 -->
+            <!-- <report format="noframes-suiteaware" todir="${test.results.junit.dir}" /> -->
+        </junitreport>
+    </target>
+
+    <target name="init_test" depends="load_properties">
+        <echo level="verbose">
+            *** Cleaning test results ***
+        </echo>
+        <make-clean-dir dir="${test.results.dir}" />
+        <!-- also delete the servoy log file -->
+        <delete failonerror="false" file="${servoy.app_server.dir}/servoy_log.txt" />
+
+        <mkdir dir="${test.results.dir}" />
+        <mkdir dir="${test.results.junit.dir}" />
+        <mkdir dir="${test.results.istanbul.dir}" />
+    </target>
+
+	<target name="load_properties">
+	   <property file="istanbul_test.properties"/>
+	</target>
+
 
 </project>
