@@ -33,9 +33,7 @@
     <target name="code_coverage_instrument_workspace" depends="code_coverage_reporting_preparation">
       <echo level="info" message="instrumenting workspace ${WORKSPACE} into temp workspace ${istanbul.temp.dir}"/>
       <echo level="info" message="Excluded by configuration : ${istanbul.exclude}"/>
-      <exec executable="cmd" failonerror="${istanbul.failOnError}">
-        <arg value="/c"/>
-        <arg value="istanbul"/>
+      <exec executable="istanbul.cmd" failonerror="${istanbul.failOnError}">
         <arg value="instrument"/>
         <arg value="${WORKSPACE}"/>
         <arg value="--output"/>
