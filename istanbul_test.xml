@@ -24,7 +24,7 @@
         <copy todir="${istanbul.instrumented.dir}">
             <fileset dir="${WORKSPACE}">
                 <include name="scopes.codeCoverageReporting.js" />
-            <fileset/>
+            </fileset>
             <globmapper from="scopes.codeCoverageReporting.js" to="codeCoverageReporting.js"/>
         </copy>
 
