@@ -3,7 +3,7 @@
 <!-- Works with Ant 1.7.0 and higher -->
 <project basedir=".">
     <property file="istanbul_test.properties"/>
-    <target name="instrument_code" depends="code_coverage_reporting_preparation, code_coverage_instrument_workspace, servoy_parse_instrumented_workspace, clean_instrument_code"/>
+    <target name="code_coverage" depends="code_coverage_reporting_preparation, code_coverage_instrument_workspace, code_coverage_fix_instrumented_workspace_for_servoy, generate_code_coverage_reports"/>
 
     <!-- Step 1: clean the instrumented workspace -->
     <target name="code_coverage_reporting_preparation">
