@@ -27,11 +27,6 @@
             </fileset>
             <globmapper from="scopes.codeCoverageReporting.js" to="codeCoverageReporting.js"/>
         </copy>
-
-        <echo level="info" message="*** Cleaning previous test results ***" />
-        <make-clean-dir dir="${test.results.dir}" />
-        <!-- also delete the servoy log file -->
-        <delete failonerror="false" file="${servoy.app_server.dir}/servoy_log.txt" />
     </target>
 
     <!-- Step 2: instrument all code from workspace into the temp instrumented workspace-->
