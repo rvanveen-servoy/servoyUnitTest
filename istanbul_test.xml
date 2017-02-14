@@ -2,83 +2,87 @@
 
 <!-- Works with Ant 1.7.0 and higher -->
 <project basedir=".">
-	
-    <target name="instrument_code" depends="load_properties, init_test, clean_instrumented_workspace, instrument_workspace, servoy_parse_instrumented_workspace, clean_instrument_code"/>
+    <property file="istanbul_test.properties"/>
+    <target name="instrument_code" depends="code_coverage_reporting_preparation, code_coverage_instrument_workspace, servoy_parse_instrumented_workspace, clean_instrument_code"/>
 
-    <!-- clean the instrumented workspace -->
-    <target name="clean_instrumented_workspace" depends="init_test">
-      <echo level="info" message="Using antRunner dir: ${antRunner.dir}"/>
-      <delete dir="${istanbul.temp.dir}"/>
-      <mkdir dir="${istanbul.temp.dir}"/>        <!-- instrumented files -->
-      <delete dir="${test.results.istanbul.dir}"/>
-      <mkdir dir="${test.results.istanbul.dir}"/>
+    <!-- Step 1: clean the instrumented workspace -->
+    <target name="code_coverage_reporting_preparation">
 
-      <delete dir="${istanbul.instrumented.dir}"/>
-      <copy todir="${istanbul.instrumented.dir}">         <!--instrumented and parsed files -->
-        <fileset dir="${WORKSPACE}">
-        </fileset>
-      </copy>
-      <replace file="${istanbul.instrumented.dir}/BmaOne_test/bmaOne_test.js" token="___report_coverage___" value="${test.results.istanbul.dir}/coverage.json"/>
-      <!-- JF: The REPORT_COVERAGE variable is derived from baseDir in the porperties file. This dir apperantly has
-      backslashes, and JavaScript doesn't like them. Replacing them here was the easiest fix. -->
-      <replace file="${istanbul.instrumented.dir}/BmaOne_test/bmaOne_test.js" token="\" value="/"/>
+        <echo level="verbose" message="Using antRunner dir: ${antRunner.dir}"/>
+        <echo level="info" message="*** Setting up folders and files ***" />
+        <mkdir dir="${test.results.dir}" />
+        <mkdir dir="${test.results.junit.dir}" />
+        <mkdir dir="${test.results.istanbul.dir}" />
+
+
+        <delete dir="${istanbul.temp.dir}"/>
+        <mkdir dir="${istanbul.temp.dir}"/>
+        <delete dir="${test.results.istanbul.dir}"/>
+        <mkdir dir="${test.results.istanbul.dir}"/>
+
+        <delete dir="${istanbul.instrumented.dir}"/>
+        <copy todir="${istanbul.instrumented.dir}">
+            <fileset dir="${WORKSPACE}">
+                <include name="scopes.codeCoverageReporting.js" />
+            <fileset/>
+            <globmapper from="scopes.codeCoverageReporting.js" to="codeCoverageReporting.js"/>
+        </copy>
+
+        <echo level="info" message="*** Cleaning previous test results ***" />
+        <make-clean-dir dir="${test.results.dir}" />
+        <!-- also delete the servoy log file -->
+        <delete failonerror="false" file="${servoy.app_server.dir}/servoy_log.txt" />
     </target>
 
-    <!-- instrument all code from workspace into the temp instrumented workspace-->
-    <target name="instrument_workspace" depends="clean_instrumented_workspace, load_properties">
+    <!-- Step 2: instrument all code from workspace into the temp instrumented workspace-->
+    <target name="code_coverage_instrument_workspace" depends="code_coverage_reporting_preparation">
       <echo level="info" message="instrumenting workspace ${WORKSPACE} into temp workspace ${istanbul.temp.dir}"/>
-      <echo level="info" message="Excluded in ant script: **svy**, **modUtils**, **mod_dialog**"/>
-      <echo level="info" message="Excluded by jenkins configuration : ${istanbul.exclude}"/>
-      <exec executable="cmd" failonerror="true">
+      <echo level="info" message="Excluded by configuration : ${istanbul.exclude}"/>
+      <exec executable="cmd" failonerror="${istanbul.failOnError}">
         <arg value="/c"/>
         <arg value="istanbul"/>
         <arg value="instrument"/>
         <arg value="${WORKSPACE}"/>
         <arg value="--output"/>
-        <arg value="${istanbul.temp.dir}"/>
+          <arg value="${istanbul.temp.dir}"/>
         <arg value="--preserve-comments"/>
+        <arg value="--no-compact"/>
+        <arg value="--save-baseline"/>
+        <arg value="--baseline-file"/>
+          <arg value="${code.coverage.output.dir}/coverage-baseline.json"/>
         <arg value="-x"/>
-        <arg value="**svy**"/>
-        <arg value="-x"/>
-        <arg value="**modUtils**"/>
-        <arg value="-x"/>
-        <arg value="**mod_dialog**"/>
-        <arg value="-x"/>
-        <arg value="${istanbul.exclude}"/>
+          <arg value="${istanbul.exclude}"/>
       </exec>
     </target>
 
     <!-- parse all the instrumented code from the temp instrumented workspace and save the modified instrumented file into the instrumented workspace-->
-    <target name="servoy_parse_instrumented_workspace" depends="instrument_workspace">
+    <target name="code_coverage_fix_instrumented_workspace_for_servoy" depends="code_coverage_reporting_preparation, code_coverage_instrument_workspace">
       <echo level="info" message="parsing Servoy code in instrumented workspace ${istanbul.temp.dir}. Generate result into ${istanbul.instrumented.dir}"/>
-      <exec executable="cmd" failonerror="${always_fails_if_instrumentation_fails}">
+      <exec executable="cmd" failonerror="${code.coverage.failOnError}">
         <arg value="/c"/>
         <arg value="node"/>
         <arg value="${servoy.parser}"/>
         <arg value="--d"/>
-        <arg value="${istanbul.instrumented.dir}"/>
-        <arg value="${istanbul.temp.dir}"/>
-        <arg value="--t"/>
-          <arg value="${instrument.test.solutions}"/>
+          <arg value="${istanbul.instrumented.dir}"/>
+          <arg value="${istanbul.temp.dir}"/>
+        <arg value="--tsp"/>
+          <arg value="${istanbul.instrumented.dir}\${instrument.test.solutions}"/>
+        <arg value="--rp"/>
+          <arg value="${code.coverage.output.dir}"/>
+        <arg value="--i"/>
+          <arg value="${servoy.instrument.include}"/>
         <arg value="--x"/>
           <arg value="${servoy.instrument.exclude}"/>
         <arg value="--e"/>
-          <arg value="${always_fails_if_instrumentation_fails}"/>
-        <arg value="--i"/>
-          <arg value="${servoy.instrument.include}"/>
+          <arg value="${code.coverage.failOnError}"/>
+        <arg value="--v"/>
+          <arg value="false"/>
       </exec>
     </target>
 
-    <!-- clean the instrumented workspace -->
-    <target name="clean_instrument_code" depends="instrument_workspace, servoy_parse_instrumented_workspace">
-      <delete dir="${istanbul.temp.dir}"/>
-    </target>
-	
 	<macrodef name="run-ng-client-tests">
         <sequential>
-            <echo level="verbose">
-                *** Servoy Solution JS unit ng client tests ***
-            </echo>
+            <echo level="info" message="*** Servoy Solution JS unit ng client tests ***" />
 
             <!-- Define a timeout so we know the test will finish eventually -->
             <junit fork="yes" forkmode="once" timeout="${test.timeout}" dir="${servoy.app_server.dir}" haltonfailure="false" haltonerror="false" errorProperty="test.failed" failureProperty="test.failed" printsummary="on">
@@ -104,35 +108,20 @@
            </sequential>
     </macrodef>
 
-    <target name="create_test_report">
-        <junitreport todir="${test.results.junit.dir}">
-            <fileset dir="${test.results.junit.dir}">
-                <include name="TEST-*.xml" />
-            </fileset>
-            <report format="noframes" todir="${test.results.junit.dir}" />
-
-            <!-- report similar to format="noframes" but it shows test suite hierarchy nicely, in a tree-like result html - useful to nicely show the place where a test failed (solution/form...)
-            but this report is not included in ant yet - you would need to patch it yourself and integrate in ant lib from https://issues.apache.org/bugzilla/show_bug.cgi?id=48529 -->
-            <!-- <report format="noframes-suiteaware" todir="${test.results.junit.dir}" /> -->
+    <target name="generate_code_coverage_reports" unless="test.failed" depends="code_coverage_reporting_preparation, code_coverage_instrument_workspace, code_coverage_fix_instrumented_workspace_for_servoy">
+        <for list="${code.coverage.report-formats}" param="format">
+            <sequential>
+            <echo level="info" message="Generating @{format} report"/>
+                <exec executable="istanbul.cmd" failonerror="${istanbul.failOnError}">
+                    <arg value="report" />
+                    <arg value="--root" />
+                    <arg value="${code.coverage.output.dir}" />
+                    <arg value="--dir" />
+                    <arg value="${code.coverage.output.dir}" />
+                    <arg value="@{format}" />
+                </exec>
+            </sequential>
+        </for>
         </junitreport>
     </target>
-
-    <target name="init_test" depends="load_properties">
-        <echo level="verbose">
-            *** Cleaning test results ***
-        </echo>
-        <make-clean-dir dir="${test.results.dir}" />
-        <!-- also delete the servoy log file -->
-        <delete failonerror="false" file="${servoy.app_server.dir}/servoy_log.txt" />
-
-        <mkdir dir="${test.results.dir}" />
-        <mkdir dir="${test.results.junit.dir}" />
-        <mkdir dir="${test.results.istanbul.dir}" />
-    </target>
-
-	<target name="load_properties">
-	   <property file="istanbul_test.properties"/>
-	</target>
-
-
 </project>
