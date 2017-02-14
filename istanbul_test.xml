@@ -122,6 +122,5 @@
                 </exec>
             </sequential>
         </for>
-        </junitreport>
     </target>
 </project>
