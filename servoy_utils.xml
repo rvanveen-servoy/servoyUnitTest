@@ -28,27 +28,26 @@
                 <jvmarg value="${servoy.exporter.memory.xmx}" />
                 <jvmarg value="${servoy.exporter.memory.maxpermsize}" />
                 <jvmarg value="-Dosgi.configuration.cascaded=false" />
-                <jvmarg value="-Dtest.log.location=${general.build.dir}/logs/export.log" />
-
+                <jvmarg value="-Dservoy.application_server.dir=${servoy_install.app_server_dir}" />
+                <!--<jvmarg value="-Djava.awt.headless=true" />-->
                 <arg value="-application" />
-                <arg value="com.servoy.eclipse.exporter.solution.application" />
+                <arg value="com.servoy.eclipse.exporter.war.application" />
 
                 <arg value="-data" />
                 <arg value="${general.workspace_location}" />
                 <arg value="-s" />
-                <arg value="${servoy.solution_name }" />
+                <arg value="${servoy.test_solution_name}" />
                 <arg value="-o" />
-                <arg value="${general.output_dir}" />
+                <arg value="${general.build.dir}" />
                 <arg value="-as" />
                 <arg value="${servoy.servoy_install.app_server_dir}" />
+                <arg value="-pluginLocations" />
+                <arg value="./plugins/" />
                 <arg value="-p" />
-                <arg value="${servoy.servoy_properties}" />
-
-                <!-- add here any of the optional arguments supported by the exporter; see 'export -help' for more info; for example: -->
-                <!--arg value="-help" /-->
+                <arg value="${servoy.servoy_properties }" />
                 <arg value="-verbose" />
-            	<arg value="-sw" />
-            	<arg value="-pl" />
+                <arg value="-sw" />
+                <arg value="-pl" />
                 <arg value="-dbd" />
                 <arg value="-dbi" />
                 <arg value="-md" />
@@ -62,6 +61,7 @@
                 <arg value="${default_admin_user}" />
                 <arg value="-defaultAdminPassword" />
                 <arg value="${default_admin_password}" />
+
             </java>
             <condition property="export.failed">
                 <not>
