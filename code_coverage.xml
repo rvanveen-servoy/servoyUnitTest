@@ -65,25 +65,21 @@
     <target name="code_coverage_fix_instrumented_workspace_for_servoy">
       <echo level="info" message="parsing Servoy code in instrumented workspace ${code.coverage.temp.dir}. Generate result into ${code.coverage.instrumented.dir}"/>
       <exec executable="cmd" failonerror="${code.coverage.failOnError}">
-        <arg value="/c"/>
-        <arg value="node"/>
-        <arg value="servoyCodeCoverageInstrumentationFixer.js"/>
-        <arg value="--d"/>
+          <arg value="/c"/>
+          <arg value="node"/>
+          <arg value="ServoyParser.js"/>
+          <arg value="--d"/>
           <arg value="${code.coverage.instrumented.dir}"/>
           <arg value="${code.coverage.temp.dir}"/>
-        <arg value="--tsp"/>
-          <arg value="${code.coverage.instrumented.dir}\${instrument.test.solutions}"/>
-        <arg value="--rp"/>
-          <arg value="${code.coverage.temp.dir}"/>
-        <arg value="--i"/>
-          <arg value="${code.coverage.instrument.include}"/>
-        <arg value="--x"/>
-          <arg value="${code.coverage.instrument.exclude}"/>
-        <arg value="--e"/>
-          <arg value="${code.coverage.failOnError}"/>
-        <arg value="--v"/>
-          <arg value="false"/>
-      </exec>
+          <arg value="--t"/>
+            <arg value="${code.coverage.instrumented.dir}\${instrument.test.solutions}"/>
+          <arg value="--x"/>
+            <arg value="${code.coverage.instrument.exclude}"/>
+          <arg value="--e"/>
+            <arg value="${code.coverage.failOnError}"/>
+          <arg value="--i"/>
+            <arg value="${code.coverage.instrument.include}"/>
+        </exec>
     </target>
 
 	<macrodef name="run-ng-client-tests">
