@@ -64,6 +64,7 @@
     <!-- parse all the instrumented code from the temp instrumented workspace and save the modified instrumented file into the instrumented workspace-->
     <target name="code_coverage_fix_instrumented_workspace_for_servoy">
       <echo level="info" message="parsing Servoy code in instrumented workspace ${code.coverage.temp.dir}. Generate result into ${code.coverage.instrumented.dir}"/>
+      <echo level="info" message="*** ${code.coverage.instrumented.dir}/${servoy.test_solution_name}" />
       <exec executable="cmd" failonerror="${code.coverage.failOnError}">
           <arg value="/c"/>
           <arg value="node"/>
