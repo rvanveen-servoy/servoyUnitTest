@@ -7,8 +7,8 @@
 <project name="Ant Solution Exporter" default="main" basedir=".">
 
     <property environment="env"/>
-	<property file="build.properties"/>
 
+	<loadproperties srcFile="build.properties"/>
     <import file="servoy_utils.xml"/>
     <import file="code_coverage.xml"/>
 
