@@ -56,8 +56,8 @@
         <arg value="--preserve-comments"/>
         <!--<arg value="--no-compact"/>
         <arg value="--save-baseline"/>
-        <arg value="--baseline-file"/> -->
-          <arg value="${code.coverage.temp.dir}/coverage-baseline.json"/>
+        <arg value="--baseline-file"/>
+          <arg value="${code.coverage.temp.dir}/coverage-baseline.json"/>-->
         <arg value="-x"/>
           <arg value="${code.coverage.exclude}"/>
       </exec>
