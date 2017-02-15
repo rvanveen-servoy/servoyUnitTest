@@ -164,10 +164,10 @@
     <target name="prepare_classpath">
         <mkdir dir="${general.build.dir}"/>
 
-        <latest_jar pathName="cse.jsunit.jar.location" dir="${servoy.developer.dir}/plugins" includes="**/com.servoy.eclipse.jsunit_*.jar"/>
-        <latest_jar pathName="cse.model.jar.location" dir="${servoy.developer.dir}/plugins" includes="**/com.servoy.eclipse.model_*.jar"/>
-        <latest_jar pathName="servoy_debug.jar.location" dir="${servoy.developer.dir}/plugins" includes="**/servoy_debug_*.jar"/>
-        <latest_jar pathName="cse.exporter.mobile.location" dir="${servoy.developer.dir}/plugins" includes="**/com.servoy.eclipse.exporter.mobile_*.jar"/>
+        <latest_jar pathName="cse.jsunit.jar.location" dir="${servoy.servoy_install.developer}/plugins" includes="**/com.servoy.eclipse.jsunit_*.jar"/>
+        <latest_jar pathName="cse.model.jar.location" dir="${servoy.servoy_install.developer}/plugins" includes="**/com.servoy.eclipse.model_*.jar"/>
+        <latest_jar pathName="servoy_debug.jar.location" dir="${servoy.servoy_install.developer}/plugins" includes="**/servoy_debug_*.jar"/>
+        <latest_jar pathName="cse.exporter.mobile.location" dir="${servoy.servoy_install.developer}/plugins" includes="**/com.servoy.eclipse.exporter.mobile_*.jar"/>
         <echo level="info" message="Using in importer classpath: ${cse.jsunit.jar.location_property}" />
         <echo level="info" message="Using in importer classpath: ${cse.model.jar.location_property}" />
         <echo level="info" message="Using in importer classpath: ${servoy_debug.jar.location_property}" />
@@ -192,7 +192,7 @@
             <fileset file="${cse.model.jar.location_property}"/>
             <fileset file="${servoy_debug.jar.location_property}"/>
             <fileset file="${cse.exporter.mobile.location_property}"/>
-            <fileset dir="${servoy.developer.dir}/plugins">
+            <fileset dir="${servoy.servoy_install.developer}/plugins">
                 <include name="org.junit*4*/junit*.jar"/>
             </fileset>
         </path>
