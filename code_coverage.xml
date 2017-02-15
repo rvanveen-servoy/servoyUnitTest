@@ -37,6 +37,7 @@
         <copy todir="${code.coverage.instrumented.dir}">
             <fileset dir="${WORKSPACE}">
                 <exclude name="${JENKINS_BUILD}/**"/>
+                <exclude name="${E2E-TESTS}/**"/>
             </fileset>
         </copy>
     </target>
