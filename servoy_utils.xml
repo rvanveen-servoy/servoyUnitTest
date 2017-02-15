@@ -2,12 +2,65 @@
 
 <!-- Works with Ant 1.7.0 and higher -->
 <project basedir=".">
-    <!-- this macro is almost identical to the sample export solution target from [developer.dir]/exporter -->
     <macrodef name="export-solution">
+		<attribute name="workspace" default="${WORKSPACE}"/>
+        <attribute name="solutionNames"/>
+        <attribute name="outputDir" default="${general.output_dir}"/>
+        <attribute name="failOnError" default="false"/>
+        <sequential>
+            <!-- now we are ready to start the workspace exporter -->
+            <echo level="info" message="Using equinox launcher jar: ${equinox.launcher.jar.location_property}" />
+
+            <java   classname="org.eclipse.equinox.launcher.Main"
+                    classpathref="equinox.launcher.jar.location"
+                    failonerror="#{failOnError}"
+                    resultproperty="export.result"
+                    fork="true">
+                <jvmarg value="${servoy.exporter.memory.xms}" />
+                <jvmarg value="${servoy.exporter.memory.xmx}" />
+                <jvmarg value="${servoy.exporter.memory.maxpermsize}" />
+                <jvmarg value="-Dosgi.configuration.cascaded=false" />
+
+                <arg value="-application" />
+                <arg value="com.servoy.eclipse.exporter.solution.application" />
+
+                <arg value="-data" />
+                <arg value="@{workspace}" />
+                <arg value="-s" />
+                <arg value="@{solutionNames}" />
+                <arg value="-o" />
+                <arg value="@{outputDir}" />
+                <arg value="-as" />
+                <arg value="${servoy.app_server.dir}" />
+                <arg value="-p" />
+                <arg value="${servoy.property.mssql.file}" />
+
+                <!-- add here any of the optional arguments supported by the exporter; see 'export -help' for more info; for example: -->
+                <!--arg value="-help" /-->
+                <arg value="${export.dash.pl.if_needed}" />
+                <arg value="-dbd" />
+                <arg value="-dbi" />
+                <arg value="-md" />
+                <arg value="ws" />
+                <arg value="-i18n" />
+                <arg value="-users" />
+                <arg value="-tables" />
+                <arg value="-modules" />
+            </java>
+            <condition property="export.failed">
+                <not>
+                    <equals arg1="${export.result}" arg2="0"/>
+                </not>
+            </condition>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="export-war">
         <attribute name="solutionNames"/>
     	<attribute name="workspace"/>
         <attribute name="outputDir" default="${general.output_dir}"/>
         <attribute name="failOnError" default="false"/>
+        <attribute name="warFileName"/>
 
     	<sequential>
             <echo level="info" message="*** Preparing build directory for export ***"/>
@@ -41,21 +94,23 @@
                 <arg value="@{outputDir}" />
                 <arg value="-as" />
                 <arg value="${servoy.servoy_install.app_server_dir}" />
-                <arg value="-pluginLocations" />
-                <arg value="./plugins/" />
                 <arg value="-p" />
                 <arg value="${servoy.servoy_properties}" />
+                <arg value="-warFileName" />
+                <arg value="@{warFileName}" />
+                <arg value="-antiResourceLocking"/>
+                <arg value="-clearReferencesStatic"/>
+                <arg value="-allowSQLKeywords" />
                 <arg value="-sw" />
                 <arg value="-pl" />
                 <arg value="-dbd" />
                 <arg value="-dbi" />
-                <arg value="-md" />
-                <arg value="ws" />
+                <arg value="-md ws" />
                 <arg value="-i18n" />
                 <arg value="-users" />
                 <arg value="-tables" />
                 <arg value="-modules" />
-                <arg value="-consoleLog" />
+                <arg value="-minimize" />
                 <arg value="-defaultAdminUser" />
                 <arg value="${servoy.default_admin_user}" />
                 <arg value="-defaultAdminPassword" />

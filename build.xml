@@ -55,7 +55,7 @@
     	</target>
 
         <target name="export_solutions" depends="get_equinox_jar">
-        	<export-solution solutionNames="${servoy.test_solution_name}" workspace="${general.workspace_location}"/>
+        	<export-solution solutionNames="${servoy.test_solution_name}" workspace="${WORKSPACE}"/>
         </target>
 
         <target name="run_smart_client_tests" unless="export.failed" depends="prepare_classpath">
@@ -65,7 +65,8 @@
         	        <isset property="test.failed"/>
         	    </not>
         	    <then>
-        	    	<antcall target="move_solution_exports"/>
+                    <antcall target="export_war" />
+                    <antcall target="move_war_exports"/>
         	    	<!--<antcall target="generate_code_coverage_reports"/>
         	    	<antcall target="generate_code_analysis_reports"/>-->
         	    </then>
@@ -100,8 +101,11 @@
     		<fail message="Tests failed: please check test reports." if="test.failed" />
     	</target>
 
+    <target name="export_war" depends="get_equinox_jar">
+        <export-war solutionNames="${servoy.solution_name}" workspace="${WORKSPACE}" warFileName="${war_file_name}"/>
+    </target>
 
-	<target name="move_solution_exports" unless="test.failed">
+	<target name="move_war_exports">
 	  <copy file="${war_file}" todir="${war_dest_dir}"/>
 	</target>
 
