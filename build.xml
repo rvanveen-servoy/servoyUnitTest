@@ -7,19 +7,19 @@
 <project name="Ant Solution Exporter" default="main" basedir=".">
 
     <property environment="env"/>
-	<property file="regular_build.properties"/>
+	<property file="build.properties"/>
 
     <import file="servoy_utils.xml"/>
     <import file="code_coverage.xml"/>
 
     <target name="main" depends="setup, code_coverage, export_smart_client_solutions, run_smart_client_tests, collect_logs, finish, move_war"/>
     <target name="setup">
-    		<!--<if>
+    		<if>
             	 <equals arg1="${servoy.test_solution_name}" arg2=""/>
             	 <then>
             	 	<fail message="Test solution Name not specified (property 'test.solution')"/>
             	 </then>
-    		</if>-->
+    		</if>
     		<!--<script language="javascript"><![CDATA[
     			var TEST_SUFFIX = '_test'
 
