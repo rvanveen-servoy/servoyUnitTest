@@ -35,10 +35,8 @@
 
         <delete dir="${code.coverage.instrumented.dir}"/>
         <copy todir="${code.coverage.instrumented.dir}">
-            <fileset dir="${WORKSPACE}">
-                <include name="scopes.codeCoverageReporting.js" />
-            </fileset>
-            <globmapper from="scopes.codeCoverageReporting.js" to="codeCoverageReporting.js"/>
+            <fileset dir="${WORKSPACE}" />
+            <exclude dir="${JENKINS-BUILD}"/>
         </copy>
     </target>
 
