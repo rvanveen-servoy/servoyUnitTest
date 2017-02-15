@@ -20,7 +20,7 @@
             	 	<fail message="Test solution Name not specified (property 'test.solution')"/>
             	 </then>
     		</if>
-    		<script language="javascript"><![CDATA[
+    		<!--<script language="javascript"><![CDATA[
     			var TEST_SUFFIX = '_test'
 
     			var testSolution = project.getProperty('test.solution')
@@ -38,7 +38,7 @@
     					project.setProperty('solution_under_testing', testSolution)
     				}
     			}
-    		]]></script>
+    		]]></script>-->
 
     	</target>
 
