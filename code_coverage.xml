@@ -50,7 +50,7 @@
       <echo level="info" message="Excluded by configuration : ${code.coverage.exclude}"/>
       <exec executable="istanbul.cmd" failonerror="${code.coverage.failOnError}">
         <arg value="instrument"/>
-        <arg value="${WORKSPACE}"/>
+        <arg value="{code.coverage.instrumented.dir}"/>
         <arg value="--output"/>
           <arg value="${code.coverage.temp.dir}"/>
         <arg value="--preserve-comments"/>
