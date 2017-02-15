@@ -10,6 +10,7 @@
         <sequential>
             <!-- now we are ready to start the workspace exporter -->
             <echo level="info" message="Using equinox launcher jar: ${equinox.launcher.jar.location_property}" />
+            <echo level="info" message="Exporting @{solutionNames} from workspace @{workspace}"/>
 
             <java   classname="org.eclipse.equinox.launcher.Main"
                     classpathref="equinox.launcher.jar.location"
@@ -33,11 +34,10 @@
                 <arg value="-as" />
                 <arg value="${servoy.app_server.dir}" />
                 <arg value="-p" />
-                <arg value="${servoy.property.mssql.file}" />
+                <arg value="${servoy.servoy_properties}" />
 
                 <!-- add here any of the optional arguments supported by the exporter; see 'export -help' for more info; for example: -->
                 <!--arg value="-help" /-->
-                <arg value="${export.dash.pl.if_needed}" />
                 <arg value="-dbd" />
                 <arg value="-dbi" />
                 <arg value="-md" />
