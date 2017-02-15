@@ -11,8 +11,8 @@
 
     	<sequential>
             <echo level="info" message="*** Preparing build directory for export ***"/>
-        	<make-clean-dir dir="${general.output_dir}" />
-        	<make-clean-dir dir="${build.dir}/logs"/>
+        	<make-clean-dir dir="@{outputDir}" />
+        	<make-clean-dir dir="${general.build.dir}/logs"/>
         	<delete failonerror="false" file="@{workspace}/.metadata/.log" />
 
         	<!-- now we are ready to start the workspace exporter -->
