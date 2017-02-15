@@ -362,7 +362,7 @@ function readWorkspaceJSFileList() {
 			// 1 parse the file content
 			try {
 				extractedContent = extractInstrumentedData(data)
-				parsedContent = removeInstrumentedData(data)
+				//parsedContent = removeInstrumentedData(data)
 			} catch (e) {
 				if (FAIL_IF_INSTRUMENTATION_FAIL) {
 					var errorMsg = 'The JS file ' + inFilePath + ' is not instrumented.'
