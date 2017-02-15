@@ -55,7 +55,7 @@
     	</target>
 
         <target name="export_solutions" depends="get_equinox_jar">
-        	<export-solution solutionNames="${servoy.test_solution_name}" workspace="${code.coverage.instrumented.dir}"/>
+        	<export-solution solutionNames="${servoy.test_solution_name}" workspace="${general.workspace_location}"/>
         </target>
 
         <target name="run_smart_client_tests" unless="export.failed" depends="prepare_classpath">

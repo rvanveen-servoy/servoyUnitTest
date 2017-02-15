@@ -34,11 +34,11 @@
                 <arg value="com.servoy.eclipse.exporter.war.application" />
 
                 <arg value="-data" />
-                <arg value="${general.workspace_location}" />
+                <arg value="@{workspace}" />
                 <arg value="-s" />
-                <arg value="${servoy.test_solution_name}" />
+                <arg value="@{solutionNames}" />
                 <arg value="-o" />
-                <arg value="${general.build.dir}" />
+                <arg value="@{outputDir}" />
                 <arg value="-as" />
                 <arg value="${servoy.servoy_install.app_server_dir}" />
                 <arg value="-pluginLocations" />
