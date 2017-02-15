@@ -18,8 +18,8 @@
     <import file="servoy_utils.xml"/>
     <import file="code_coverage.xml"/>
 
-<!-- code_coverage -->
-    <target name="main" depends="load_properties, setup, export_solutions, run_smart_client_tests, collect_logs, finish"/>
+<!-- code_coverage, run_smart_client_tests, collect_logs, finish -->
+    <target name="main" depends="load_properties, setup, export_solutions"/>
 
     <target name="load_properties">
         <echo level="info" message="outputje ${servoy.test_solution_name}"/>
