@@ -366,7 +366,7 @@ function readWorkspaceJSFileList() {
 			} catch (e) {
 				if (FAIL_IF_INSTRUMENTATION_FAIL) {
 					var errorMsg = 'The JS file ' + inFilePath + ' is not instrumented.'
-					throw new Error(e.message)
+					throw new Error(errorMsg)
 				} else {
 					log('Skipping not instrumented JS file ' + inFilePath + '.')
 					parsedContent = data;
@@ -498,7 +498,7 @@ function removeInstrumentedData(data) {
 		parsedData = parsedData.replace(LEFT_CONTENT, '\n/**\n * @properties={typeid:35,uuid:"' + generateUUID() + '"} \n */\nvar istanbul_init = (function (){ ' + LEFT_CONTENT)
 		return parsedData
 	} else {
-		throw new Error('File not instrumented')
+		//throw new Error('File not instrumented')
 	}
 	return data;
 }
