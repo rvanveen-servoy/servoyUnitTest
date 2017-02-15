@@ -21,20 +21,20 @@
     <!-- Step 1: clean the instrumented workspace -->
     <target name="code_coverage_reporting_preparation">
 
-        <echo level="verbose" message="Using antRunner dir: ${antRunner.dir}"/>
+        <echo level="verbose" message="Using antRunner dir: ${general.antRunner.dir}"/>
         <echo level="info" message="*** Setting up folders and files ***" />
-        <mkdir dir="${test.results.dir}" />
-        <mkdir dir="${test.results.junit.dir}" />
-        <mkdir dir="${test.results.istanbul.dir}" />
+        <mkdir dir="${general.test.result.dir}" />
+        <mkdir dir="${general.junit.result.dir}" />
+        <mkdir dir="${general.istanbul.result.dir}" />
 
 
-        <delete dir="${istanbul.temp.dir}"/>
-        <mkdir dir="${istanbul.temp.dir}"/>
-        <delete dir="${test.results.istanbul.dir}"/>
-        <mkdir dir="${test.results.istanbul.dir}"/>
+        <delete dir="${code.coverage.temp.dir}"/>
+        <mkdir dir="${code.coverage.temp.dir}"/>
+        <delete dir="${general.istanbul.result.dir}"/>
+        <mkdir dir="${general.istanbul.result.dir}"/>
 
-        <delete dir="${istanbul.instrumented.dir}"/>
-        <copy todir="${istanbul.instrumented.dir}">
+        <delete dir="${code.coverage.instrumented.dir}"/>
+        <copy todir="${code.coverage.instrumented.dir}">
             <fileset dir="${WORKSPACE}">
                 <include name="scopes.codeCoverageReporting.js" />
             </fileset>
@@ -44,41 +44,41 @@
 
     <!-- Step 2: instrument all code from workspace into the temp instrumented workspace-->
     <target name="code_coverage_instrument_workspace">
-      <echo level="info" message="instrumenting workspace ${WORKSPACE} into temp workspace ${istanbul.temp.dir}"/>
-      <echo level="info" message="Excluded by configuration : ${istanbul.exclude}"/>
-      <exec executable="istanbul.cmd" failonerror="${istanbul.failOnError}">
+      <echo level="info" message="instrumenting workspace ${WORKSPACE} into temp workspace ${code.coverage.temp.dir}"/>
+      <echo level="info" message="Excluded by configuration : ${code.coverage.exclude}"/>
+      <exec executable="istanbul.cmd" failonerror="${code.coverage.failOnError}">
         <arg value="instrument"/>
         <arg value="${WORKSPACE}"/>
         <arg value="--output"/>
-          <arg value="${istanbul.temp.dir}"/>
+          <arg value="${code.coverage.temp.dir}"/>
         <arg value="--preserve-comments"/>
         <arg value="--no-compact"/>
         <arg value="--save-baseline"/>
         <arg value="--baseline-file"/>
-          <arg value="${istanbul.temp.dir}/coverage-baseline.json"/>
+          <arg value="${code.coverage.temp.dir}/coverage-baseline.json"/>
         <arg value="-x"/>
-          <arg value="${istanbul.exclude}"/>
+          <arg value="${code.coverage.exclude}"/>
       </exec>
     </target>
 
     <!-- parse all the instrumented code from the temp instrumented workspace and save the modified instrumented file into the instrumented workspace-->
     <target name="code_coverage_fix_instrumented_workspace_for_servoy">
-      <echo level="info" message="parsing Servoy code in instrumented workspace ${istanbul.temp.dir}. Generate result into ${istanbul.instrumented.dir}"/>
+      <echo level="info" message="parsing Servoy code in instrumented workspace ${code.coverage.temp.dir}. Generate result into ${code.coverage.instrumented.dir}"/>
       <exec executable="cmd" failonerror="${code.coverage.failOnError}">
         <arg value="/c"/>
         <arg value="node"/>
         <arg value="${servoy.parser}"/>
         <arg value="--d"/>
-          <arg value="${istanbul.instrumented.dir}"/>
-          <arg value="${istanbul.temp.dir}"/>
+          <arg value="${code.coverage.instrumented.dir}"/>
+          <arg value="${code.coverage.temp.dir}"/>
         <arg value="--tsp"/>
-          <arg value="${istanbul.instrumented.dir}\${instrument.test.solutions}"/>
+          <arg value="${code.coverage.instrumented.dir}\${instrument.test.solutions}"/>
         <arg value="--rp"/>
-          <arg value="${istanbul.temp.dir}"/>
+          <arg value="${code.coverage.temp.dir}"/>
         <arg value="--i"/>
-          <arg value="${servoy.instrument.include}"/>
+          <arg value="${code.coverage.instrument.include}"/>
         <arg value="--x"/>
-          <arg value="${servoy.instrument.exclude}"/>
+          <arg value="${code.coverage.instrument.exclude}"/>
         <arg value="--e"/>
           <arg value="${code.coverage.failOnError}"/>
         <arg value="--v"/>
@@ -91,7 +91,7 @@
             <echo level="info" message="*** Servoy Solution JS unit ng client tests ***" />
 
             <!-- Define a timeout so we know the test will finish eventually -->
-            <junit fork="yes" forkmode="once" timeout="${test.timeout}" dir="${servoy.app_server.dir}" haltonfailure="false" haltonerror="false" errorProperty="test.failed" failureProperty="test.failed" printsummary="on">
+            <junit fork="yes" forkmode="once" timeout="${servoy.test.timeout}" dir="${servoy.app_server.dir}" haltonfailure="false" haltonerror="false" errorProperty="test.failed" failureProperty="test.failed" printsummary="on">
                 <jvmarg value="-XX:MaxPermSize=128m" />
                 <classpath refid="classpath.run_test" />
 
@@ -105,7 +105,7 @@
                 if you plan on using it, either comment out the simple "xml" formatter or add "extension" attribute to one of them so they don't get into conflicts when generating xmls -->
                 <!-- <formatter type="xml.suites" /> -->
 
-                <test name="com.servoy.automation.jsunit.smartclient.ServoyJSUnitTestRunner" todir="${test.results.junit.dir}" />
+                <test name="com.servoy.automation.jsunit.smartclient.ServoyJSUnitTestRunner" todir="${general.junit.result.dir}" />
             </junit>
 
             <antcall target="generate_code_coverage_reports"/>
@@ -118,12 +118,12 @@
         <for list="${code.coverage.report-formats}" param="format">
             <sequential>
             <echo level="info" message="Generating @{format} report"/>
-                <exec executable="istanbul.cmd" failonerror="${istanbul.failOnError}">
+                <exec executable="istanbul.cmd" failonerror="${code.coverage.failOnError}">
                     <arg value="report" />
                     <arg value="--root" />
-                    <arg value="${istanbul.temp.dir}" />
+                    <arg value="${code.coverage.temp.dir}" />
                     <arg value="--dir" />
-                    <arg value="${istanbul.temp.dir}" />
+                    <arg value="${code.coverage.temp.dir}" />
                     <arg value="@{format}" />
                 </exec>
             </sequential>
