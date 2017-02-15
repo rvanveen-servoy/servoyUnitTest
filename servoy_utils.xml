@@ -5,7 +5,7 @@
     <macrodef name="export-solution">
 		<attribute name="workspace" default="${WORKSPACE}"/>
         <attribute name="solutionNames"/>
-        <attribute name="outputDir" default="${general.output_dir}"/>
+        <attribute name="outputDir" default="${general.test.exports.regular.dir}"/>
         <attribute name="failOnError" default="false"/>
         <sequential>
             <!-- now we are ready to start the workspace exporter -->
