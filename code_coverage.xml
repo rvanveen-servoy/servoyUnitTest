@@ -36,8 +36,9 @@
         <delete dir="${code.coverage.instrumented.dir}"/>
         <copy todir="${code.coverage.instrumented.dir}">
             <fileset dir="${WORKSPACE}" />
-            <exclude dir="${JENKINS-BUILD}"/>
         </copy>
+
+        <delete dir="${code.coverage.instrumented.dir}/jenkins-build" />
     </target>
 
     <!-- Step 2: instrument all code from workspace into the temp instrumented workspace-->
