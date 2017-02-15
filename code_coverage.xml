@@ -36,8 +36,8 @@
         <delete dir="${code.coverage.instrumented.dir}"/>
         <copy todir="${code.coverage.instrumented.dir}">
             <fileset dir="${WORKSPACE}">
-                <exclude name="${JENKINS_BUILD}/**"/>
-                <exclude name="${E2E-TESTS}/**"/>
+                <exclude name="**/jenkins-build/**"/>
+                <exclude name="**/e2e-tests/**"/>
             </fileset>
         </copy>
     </target>
