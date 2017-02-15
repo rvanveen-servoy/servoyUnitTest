@@ -38,10 +38,11 @@
 
                 <!-- add here any of the optional arguments supported by the exporter; see 'export -help' for more info; for example: -->
                 <!--arg value="-help" /-->
+                <arg value="-verbose" />
+                <arg value="${export.dash.pl.if_needed}" />
                 <arg value="-dbd" />
                 <arg value="-dbi" />
-                <arg value="-md" />
-                <arg value="ws" />
+                <arg value="-md ws" />
                 <arg value="-i18n" />
                 <arg value="-users" />
                 <arg value="-tables" />
