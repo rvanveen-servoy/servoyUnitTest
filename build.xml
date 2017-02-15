@@ -19,7 +19,7 @@
     <import file="code_coverage.xml"/>
 
 <!-- code_coverage -->
-    <target name="main" depends="load_properties, setup, code_coverage, export_solutions, run_smart_client_tests, collect_logs, finish, move_war"/>
+    <target name="main" depends="load_properties, setup, export_solutions, run_smart_client_tests, collect_logs, finish, move_war"/>
 
     <target name="load_properties">
         <echo level="info" message="outputje ${servoy.test_solution_name}"/>
