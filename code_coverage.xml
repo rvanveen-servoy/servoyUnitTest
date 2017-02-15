@@ -5,7 +5,7 @@
     <target name="code_coverage">
         <if>
             <not>
-                <equals arg1="${code.coverage.enabled" arg2="true" />
+                <equals arg1="${code.coverage.enabled}" arg2="true" />
             </not>
             <then>
                 <echo level="info" message="Code Coverage Reporting disabled" />
