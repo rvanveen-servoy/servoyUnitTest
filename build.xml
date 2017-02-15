@@ -19,7 +19,7 @@
     <import file="code_coverage.xml"/>
 
 <!-- code_coverage -->
-    <target name="main" depends="load_properties, setup, export_solutions, run_smart_client_tests, collect_logs, finish, move_war"/>
+    <target name="main" depends="load_properties, setup, export_solutions, run_smart_client_tests, collect_logs, finish"/>
 
     <target name="load_properties">
         <echo level="info" message="outputje ${servoy.test_solution_name}"/>
@@ -60,16 +60,16 @@
 
         <target name="run_smart_client_tests" unless="export.failed" depends="prepare_classpath">
             <run-smart-client-tests/>
-        	<if>
+        	<!--<if>
         	    <not>
         	        <isset property="test.failed"/>
         	    </not>
-        	    <then>
+        	    <then>-->
         	    	<antcall target="move_solution_exports"/>
-        	    	<antcall target="generate_code_coverage_reports"/>
+        	    	<!--<antcall target="generate_code_coverage_reports"/>
         	    	<antcall target="generate_code_analysis_reports"/>
         	    </then>
-        	</if>
+           </if>-->
         </target>
 
         <target name="collect_logs">
@@ -101,7 +101,7 @@
     	</target>
 
 
-	<target name="move_war">
+	<target name="move_solution_exports">
 	  <copy file="${war_file}" todir="${war_dest_dir}"/>
 	</target>
 
