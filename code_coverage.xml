@@ -74,7 +74,7 @@
           <arg value="--d"/>
           <arg value="${code.coverage.temp.dir}"/>
           <arg value="${code.coverage.instrumented.dir}"/>
-          <arg value="--tsp"/>
+          <arg value="--t"/>
             <arg value="${servoy.test_solution_name}"/>
           <arg value="--x"/>
             <arg value="${code.coverage.instrument.exclude}"/>
