@@ -50,7 +50,7 @@
         <arg value="instrument"/>
         <arg value="${WORKSPACE}"/>
         <arg value="--output"/>
-          <arg value="${code.coverage.temp.dir}"/>
+          <arg value="${code.coverage.instrumented.dir}"/>
         <arg value="--preserve-comments"/>
         <arg value="--no-compact"/>
         <arg value="--save-baseline"/>
