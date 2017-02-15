@@ -4,92 +4,93 @@
 <!-- These are useful combined with command line/ant test runners for mobile/smart client solutions exports; -->
 <!-- see Servoy Wiki - Building A Software Factory for how to use test runners with ant on these exports -->
 <!--<project name="Ant Solution Exporter" default="copy_fonts_dir" basedir=".">-->
-<project name="Ant Solution Exporter" default="move_war" basedir=".">
+<project name="Ant Solution Exporter" default="main" basedir=".">
 
-    <target name="load_properties">
-	   <property file="build.properties"/>
-	</target>
+    <property environment="env"/>
+	<property file="regular_build.properties"/>
 
+    <import file="servoy_utils.xml"/>
+    <import file="code_coverage.xml"/>
+
+    <target name="main" depends="setup, code_coverage, export_smart_client_solutions, run_smart_client_tests, collect_logs, finish"/>
     <target name="setup">
-        <!-- store path to newest Eclipse launcher JAR in path id 'newest.equinox.launcher.path.id' -->
-        <path id="newest.equinox.launcher.path.id">
-            <first count="1">
-              <sort>
-                <fileset dir="${servoy_install.developer}\plugins" includes="**/org.eclipse.equinox.launcher_*.jar" />
-                <reverse xmlns="antlib:org.apache.tools.ant.types.resources.comparators">
-                  <date />
-                </reverse>
-              </sort>
-            </first>
-        </path>
-        <echo level="info" message="Using equinox path id: ${servoy_install.developer}\plugins" />
+    		<if>
+            	 <equals arg1="${servoy.test_solution_name}" arg2=""/>
+            	 <then>
+            	 	<fail message="Test solution Name not specified (property 'test.solution')"/>
+            	 </then>
+    		</if>
+    		<script language="javascript"><![CDATA[
+    			var TEST_SUFFIX = '_test'
 
-        <!-- turn the path into a property -->
-        <property name="equinox.launcher.jar.location" refid="newest.equinox.launcher.path.id" />
+    			var testSolution = project.getProperty('test.solution')
+    			var solutionUnderTesting = project.getProperty('solution_under_testing')
 
-        <!-- now we are ready to start the workspace exporter -->
-        <echo level="info" message="Using equinox launcher jar: ${equinox.launcher.jar.location}" />
-    </target>
+    			if (!testSolution) { //if 'test.solution' is not set, derive it from the Job name
+    				testSolution = project.getProperty('env.JOB_NAME') + TEST_SUFFIX
+    				project.setProperty('test.solution', testSolution)
+    			}
+
+    			if (!solutionUnderTesting) { //if 'solution_under_testing' is not set, derive it from the 'test.solution' value
+    				if (testSolution.slice(-5) === TEST_SUFFIX) {
+    					project.setProperty('solution_under_testing', testSolution.slice(0,-5))
+    				} else {
+    					project.setProperty('solution_under_testing', testSolution)
+    				}
+    			}
+    		]]></script>
+
+    	</target>
+
+        <target name="export_smart_client_solutions" depends="get_equinox_jar">
+        	<export-solution solutionNames="${servoy.test_solution_name}" workspace="${code.coverage.instrumented.dir}"/>
+        </target>
+
+        <target name="run_smart_client_tests" unless="export.failed" depends="prepare_classpath">
+            <run-smart-client-tests/>
+        	<if>
+        	    <not>
+        	        <isset property="test.failed"/>
+        	    </not>
+        	    <then>
+        	    	<antcall target="move_solution_exports"/>
+        	    	<antcall target="generate_code_coverage_reports"/>
+        	    	<antcall target="generate_code_analysis_reports"/>
+        	    </then>
+        	</if>
+        </target>
+
+        <target name="collect_logs">
+        	<!-- Move workspace log to build/logs directory -->
+            <move file="${WORKSPACE}/.metadata/.log" tofile="${general.build.dir}/logs/workspace.log" failonerror="false"/>
+        </target>
+
+    	<target name="finish">
+    		<!-- Move the collected logs to the folder for the specific Jenkins build as artifacts -->
+    		<!--<move todir="${current_job.dir}/builds/${env.BUILD_NUMBER}/archive">
+                <fileset dir="${build.dir}/logs" includes="*.log" />
+            </move> -->
+
+    <!-- TODO fix the if statement... isn't taking it
+    		<if>
+    			<istrue value="${export.solution_under_testing.as.artifact}"/>
+    			<then> --> <!-- export the solution_under_testing solution as artifact -->
+
+    				<!--<export-solution solutionNames="${solution_under_testing}" workspace="${WORKSPACE}"/>
+    				<move todir="${current_job.dir}/builds/${env.BUILD_NUMBER}/archive">
+    		            <fileset dir="${test.exports.regular.dir}" includes="${solution_under_testing}.servoy" />
+    		        </move>-->
+    <!--
+    			</then>
+    		</if>
+    -->
+    		<fail message="Exports failed: please check exporter log files." if="export.failed" />
+    		<fail message="Tests failed: please check test reports." if="test.failed" />
+    	</target>
 
 
-    <target name="export_war" depends="load_properties, setup">
-
-			<echo level="info" message="Using application_server dir: ${servoy_install.app_server_dir}"/>
-    		<echo level="info" message="Using developer          dir: ${servoy_install.developer}"/>
-        	<echo level="info" message="Using equinox launcher   jar: ${equinox.launcher.jar.location}" />
-    		<echo level="info" message="Using pluginLocations   dir: ${servoy_install.developer}/plugins/" />
-            <echo level="info" message="Using workspace   dir: ${workspace_location}" />
-
-        <java   classname="org.eclipse.equinox.launcher.Main"
-                classpath="${equinox.launcher.jar.location}"
-                failonerror="true"
-                fork="true">
-            <jvmarg value="-Xms40m" />
-            <jvmarg value="-Xmx512m" />
-            <jvmarg value="-XX:MaxPermSize=256M" />
-            <jvmarg value="-Dosgi.configuration.cascaded=false" />
-			<jvmarg value="-Dservoy.application_server.dir=${servoy_install.app_server_dir}" />
-        	<!--<jvmarg value="-Djava.awt.headless=true" />-->
-            <arg value="-application" />
-            <arg value="com.servoy.eclipse.exporter.war.application" />
-
-            <arg value="-data" />
-            <arg value="${workspace_location}" />
-            <arg value="-s" />
-            <arg value="${solution_name}" />
-            <arg value="-o" />
-            <arg value="${output_dir}" />
-            <arg value="-as" />
-           	<arg value="${servoy_install.app_server_dir}" />
-        	<arg value="-pluginLocations" />
-        	<arg value="./plugins/" />
-            <arg value="-p" />
-            <arg value="${servoy_properties}" />
-            <arg value="-verbose" />
-            <arg value="-sw" />
-            <arg value="-pl" />
-            <arg value="-dbd" />
-            <arg value="-dbi" />
-            <arg value="-md" />
-            <arg value="ws" />
-            <arg value="-i18n" />
-            <arg value="-users" />
-            <arg value="-tables" />
-            <arg value="-modules" />
-            <arg value="-consoleLog" />
-			<arg value="-defaultAdminUser" />
-            <arg value="${default_admin_user}" />
-            <arg value="-defaultAdminPassword" />
-            <arg value="${default_admin_password}" />
-
-
-
-            <!-- add here any of the optional arguments supported by the exporter; see 'war_export -help' for more info -->
-        </java>
-    </target>
-	
 	<target name="move_war" depends="load_properties, setup, export_war">
 	  <copy file="${war_file}" todir="${war_dest_dir}"/>
 	</target>
-	
+
 </project>
