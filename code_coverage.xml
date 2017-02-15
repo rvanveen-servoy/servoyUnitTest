@@ -54,15 +54,15 @@
         <arg value="--output"/>
           <arg value="${code.coverage.temp.dir}"/>
         <arg value="--preserve-comments"/>
-        <!--<arg value="--no-compact"/>
-        <arg value="--save-baseline"/>
-        <arg value="--baseline-file"/>
-          <arg value="${code.coverage.temp.dir}/coverage-baseline.json"/>-->
+
         <arg value="-x"/>
           <arg value="${code.coverage.exclude}"/>
       </exec>
     </target>
-
+    <!-- arg value="--no-compact"/>
+    <arg value="--save-baseline"/>
+    <arg value="--baseline-file"/>
+      <arg value="${code.coverage.temp.dir}/coverage-baseline.json"/> -->
     <!-- parse all the instrumented code from the temp instrumented workspace and save the modified instrumented file into the instrumented workspace-->
     <target name="code_coverage_fix_instrumented_workspace_for_servoy">
       <echo level="info" message="parsing Servoy code in instrumented workspace ${code.coverage.temp.dir}. Generate result into ${code.coverage.instrumented.dir}"/>
