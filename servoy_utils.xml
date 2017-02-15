@@ -45,7 +45,6 @@
                 <arg value="./plugins/" />
                 <arg value="-p" />
                 <arg value="${servoy.servoy_properties}" />
-                <arg value="-verbose" />
                 <arg value="-sw" />
                 <arg value="-pl" />
                 <arg value="-dbd" />
