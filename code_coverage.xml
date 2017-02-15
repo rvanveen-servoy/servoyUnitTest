@@ -36,10 +36,12 @@
         <delete dir="${code.coverage.instrumented.dir}"/>
         <copy todir="${code.coverage.instrumented.dir}">
             <fileset dir="${WORKSPACE}">
-                <exclude name="**/jenkins-build/**"/>
-                <exclude name="**/e2e-tests/**"/>
             </fileset>
         </copy>
+
+        <delete dir="${code.coverage.instrumented.dir}/jenkins-build"/>
+        <delete dir="${code.coverage.instrumented.dir}/e2e-tests"/>
+
     </target>
 
     <!-- Step 2: instrument all code from workspace into the temp instrumented workspace-->
