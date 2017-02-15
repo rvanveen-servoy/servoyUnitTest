@@ -165,6 +165,7 @@
             	<sysproperty key="servoy.test.solution-load.timeout" value="${servoy.solution-load.timeout}" />
                 <!-- <sysproperty key="servoy.test.target-file-ext" value=".servoy" /> -->
 
+                <formatter type="brief" usefile="false" />
                 <formatter type="xml" extension=".xm1"/>
 
                 <!-- formatter similar to type="xml" but it shows test suite hierarchy nicely, in a tree-like result xml - useful to nicely show the place where a test failed (solution/form...)
