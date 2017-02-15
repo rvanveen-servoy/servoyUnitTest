@@ -57,9 +57,9 @@
                 <arg value="-modules" />
                 <arg value="-consoleLog" />
                 <arg value="-defaultAdminUser" />
-                <arg value="${default_admin_user}" />
+                <arg value="${servoy.default_admin_user}" />
                 <arg value="-defaultAdminPassword" />
-                <arg value="${default_admin_password}" />
+                <arg value="${servoy.default_admin_password}" />
 
             </java>
             <condition property="export.failed">
