@@ -3,19 +3,19 @@
 <!-- Works with Ant 1.7.0 and higher -->
 <project basedir=".">
     <target name="code_coverage">
-        <!--<if>
+        <if>
             <not>
-                <equals arg1="${code.coverage.enabled" arg2="true" />
+                <equals arg1="${code.coverage.enabled}" arg2="true" />
             </not>
             <then>
                 <echo level="info" message="Code Coverage Reporting disabled" />
             </then>
-            <else>-->
+            <else>
                 <antcall target="code_coverage_reporting_preparation" />
                 <antcall target="code_coverage_instrument_workspace" />
                 <antcall target="code_coverage_fix_instrumented_workspace_for_servoy" />
-            <!--</else>
-        </if>-->
+            </else>
+        </if>
     </target>
 
     <!-- Step 1: clean the instrumented workspace -->
@@ -50,7 +50,7 @@
         <arg value="instrument"/>
         <arg value="${WORKSPACE}"/>
         <arg value="--output"/>
-          <arg value="${code.coverage.temp.dir}"/>
+          <arg value="${code.coverage.instrumented.dir}"/>
         <arg value="--preserve-comments"/>
         <arg value="--no-compact"/>
         <arg value="--save-baseline"/>
@@ -64,7 +64,7 @@
     <!-- parse all the instrumented code from the temp instrumented workspace and save the modified instrumented file into the instrumented workspace-->
     <target name="code_coverage_fix_instrumented_workspace_for_servoy">
       <echo level="info" message="parsing Servoy code in instrumented workspace ${code.coverage.temp.dir}. Generate result into ${code.coverage.instrumented.dir}"/>
-      <echo level="info" message="*** ${code.coverage.instrumented.dir}/${servoy.test_solution_name}" />
+      <echo level="info" message="*** ${code.coverage.instrumented.dir}" />
       <exec executable="cmd" failonerror="${code.coverage.failOnError}">
           <arg value="/c"/>
           <arg value="node"/>
@@ -73,13 +73,15 @@
           <arg value="${code.coverage.instrumented.dir}"/>
           <arg value="${code.coverage.temp.dir}"/>
           <arg value="--t"/>
-            <arg value="${code.coverage.instrumented.dir}/${servoy.test_solution_name}"/>
+            <arg value="${servoy.test_solution_name}"/>
           <arg value="--x"/>
             <arg value="${code.coverage.instrument.exclude}"/>
           <arg value="--e"/>
             <arg value="${code.coverage.failOnError}"/>
           <arg value="--i"/>
             <arg value="${code.coverage.instrument.include}"/>
+          <arg value="--v"/>
+            <arg value="true"/>
         </exec>
     </target>
 
