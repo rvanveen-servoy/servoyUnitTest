@@ -72,7 +72,7 @@
           <arg value="${code.coverage.instrumented.dir}"/>
           <arg value="${code.coverage.temp.dir}"/>
           <arg value="--t"/>
-            <arg value="${code.coverage.instrumented.dir}\${servoy.test_solution_name}"/>
+            <arg value="${code.coverage.instrumented.dir}/${servoy.test_solution_name}"/>
           <arg value="--x"/>
             <arg value="${code.coverage.instrument.exclude}"/>
           <arg value="--e"/>
