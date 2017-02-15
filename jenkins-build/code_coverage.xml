@@ -68,7 +68,7 @@
       <exec executable="cmd" failonerror="${code.coverage.failOnError}">
           <arg value="/c"/>
           <arg value="node"/>
-          <arg value="ServoyParser.js"/>
+          <arg value="${JENKINS-BUILD}/ServoyParser.js"/>
           <arg value="--d"/>
           <arg value="${code.coverage.instrumented.dir}"/>
           <arg value="${code.coverage.temp.dir}"/>
