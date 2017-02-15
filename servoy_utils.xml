@@ -239,7 +239,7 @@
                 <include name="*.jar" />
                 <exclude name="slf4j-jdk14.jar"/>
             </fileset>
-            <fileset dir="${build.dir}">
+            <fileset dir="${general.build.dir}">
                 <include name="*.jar" />
             </fileset>
             <fileset file="${cse.jsunit.jar.location_property}"/>
