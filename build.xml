@@ -25,12 +25,12 @@
     </target>
 
     <target name="setup">
-    		<if>
+    		<!--<if>
             	 <equals arg1="${servoy.test_solution_name}" arg2=""/>
             	 <then>
             	 	<fail message="Test solution Name not specified (property 'test.solution')"/>
             	 </then>
-    		</if>
+    		</if>-->
     		<script language="javascript"><![CDATA[
     			var TEST_SUFFIX = '_test'
 
