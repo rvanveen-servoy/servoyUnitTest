@@ -119,7 +119,7 @@
                     <arg value="--root" />
                     <arg value="${code.coverage.temp.dir}" />
                     <arg value="--dir" />
-                    <arg value="${code.coverage.temp.dir}" />
+                    <arg value="${general.istanbul.result.dir}" />
                     <arg value="@{format}" />
                 </exec>
             </sequential>
