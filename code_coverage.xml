@@ -23,8 +23,11 @@
 
         <echo level="verbose" message="Using antRunner dir: ${general.antRunner.dir}"/>
         <echo level="info" message="*** Setting up folders and files ***" />
+        <delete dir="${general.test.result.dir}" />
         <mkdir dir="${general.test.result.dir}" />
+        <delete dir="${general.junit.result.dir}" />
         <mkdir dir="${general.junit.result.dir}" />
+        <delete dir="$${general.istanbul.result.dir}" />
         <mkdir dir="${general.istanbul.result.dir}" />
 
 
