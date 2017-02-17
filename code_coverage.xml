@@ -108,7 +108,7 @@
     </macrodef>
 
     <target name="generate_code_coverage_reports" unless="test.failed">
-        <for list="${code.coverage.report-formats}" param="format">
+        <for list="lcov,cobertura" param="format">
             <sequential>
             <echo level="info" message="Generating @{format} report"/>
                 <exec executable="istanbul.cmd" failonerror="${code.coverage.failOnError}">

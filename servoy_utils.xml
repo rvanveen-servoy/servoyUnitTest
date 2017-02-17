@@ -126,7 +126,7 @@
         </sequential>
     </macrodef>
 
-    <macrodef name="run-smart-client-tests">
+    <macrodef name="run_servoy_jsunit_tests">
 		<sequential>
 			<echo level="info" message="*** Preparing build directory for Unit Tests ***"/>
 			<make-clean-dir dir="${general.junit.result.dir}" />
