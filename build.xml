@@ -59,7 +59,7 @@
             </then>
             <else>
     	       <export-solution solutionNames="${servoy.test_solution_name}" workspace="${WORKSPACE}"/>
-               <antcall target="run_smart_client_tests" />
+               <antcall target="run_servoy_jsunit_tests" />
            </else>
        </if>
     </target>
@@ -71,8 +71,8 @@
     	        <isset property="test.failed"/>
     	    </not>
     	    <then>
-    	    	<!-- <antcall target="generate_code_coverage_reports"/>
-    	    	<antcall target="generate_code_analysis_reports"/> -->
+    	    	<antcall target="generate_code_coverage_reports"/>
+    	    	<!-- <antcall target="generate_code_analysis_reports"/> -->
     	    </then>
        </if>
     </target>
