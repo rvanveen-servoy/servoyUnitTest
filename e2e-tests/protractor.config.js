@@ -44,8 +44,8 @@ exports.config = {
 
    // If sauceUser and sauceKey are specified, seleniumServerJar will be ignored.
   // The tests will be run remotely using SauceLabs.
-  sauceUser: '@{sauceUserPlaceholder}@',
-  sauceKey: '@{sauceKeyPlaceholder}@',
+  //sauceUser: '@{sauceUserPlaceholder}@',
+  //sauceKey: '@{sauceKeyPlaceholder}@',
   
   // The address of a running selenium server. If specified, Protractor will
   // connect to an already running instance of selenium. This usually looks like
