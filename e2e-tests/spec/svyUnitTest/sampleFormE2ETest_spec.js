@@ -2,7 +2,7 @@
 describe('calculate test', function() {
   it('should do a calculation', function() {
 	var EC = protractor.ExpectedConditions;
-	browser.waitForAngular();
+	//browser.waitForAngular();
 
     browser.get('http://localhost/svyUnitTest/solutions/svyUnitTest/index.html');
 	
