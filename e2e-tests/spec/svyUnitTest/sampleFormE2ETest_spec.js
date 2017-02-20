@@ -2,14 +2,15 @@
 describe('calculate test', function() {
   it('should do a calculation', function() {
 	var EC = protractor.ExpectedConditions;
+	browser.waitForAngular();
+
     browser.get('http://localhost/svyUnitTest/solutions/svyUnitTest/index.html');
 	
-	browser.waitForAngular();
 
     //wait for field_one
 	browser.wait(function(){
 		return element(by.xpath("//*[@data-svy-name='sampleForm.field_one']")).isPresent();
-	}, 15000).then(function(){
+	}, 300000).then(function(){
 		var fld1 = element(by.xpath("//*[@data-svy-name='sampleForm.field_one']"));
 		fld1.clear();
 		fld1.sendKeys(5);	
