@@ -35,6 +35,8 @@
                 <arg value="${servoy.app_server.dir}" />
                 <arg value="-p" />
                 <arg value="${servoy.servoy_properties}" />
+				<arg value="-pfw" />
+                <arg value="${servoy.servoy_properties}" />
 
                 <!-- add here any of the optional arguments supported by the exporter; see 'export -help' for more info; for example: -->
                 <!--arg value="-help" /-->
