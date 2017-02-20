@@ -4,6 +4,8 @@ describe('calculate test', function() {
 	var EC = protractor.ExpectedConditions;
     browser.get('http://localhost/svyUnitTest/solutions/svyUnitTest/index.html');
 	
+	browser.waitForAngular();
+
     //wait for field_one
 	browser.wait(function(){
 		return element(by.xpath("//*[@data-svy-name='sampleForm.field_one']")).isPresent();
@@ -37,7 +39,7 @@ describe('calculate test', function() {
 	 promise.then(function(){
 		browser.wait(function(){
 			return element(by.xpath("//*[@data-svy-name='sampleForm.result']")).isPresent();
-		}, 5000).then(function(){
+		}, 15000).then(function(){
 			//browser.pause();
 			expect(element(by.xpath("//*[@data-svy-name='sampleForm.result']")).getText()).toBe('10')
 		});
