@@ -27,9 +27,9 @@ describe('calculate test', function() {
 		return element(by.xpath("//*[@data-svy-name='sampleForm.calculate']/button")).isPresent();
 	}, 5000).then(function(){
 		var elem = element(by.xpath("//*[@data-svy-name='sampleForm.calculate']/button"));	
-		browser.wait(EC.elementToBeClickable(elem), 5000).then(function(){
+		//browser.wait(EC.elementToBeClickable(elem), 5000).then(function(){
 			return elem.click();
-		});
+		//});
 	});
 	
 
