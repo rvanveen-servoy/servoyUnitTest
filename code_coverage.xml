@@ -22,7 +22,7 @@
     <target name="code_coverage_reporting_preparation">
 
         <echo level="verbose" message="Using antRunner dir: ${general.antRunner.dir}"/>
-        <echo level="info" message="*** Setting up folders and files ***" />
+        <echo level="info" message="*** Setting up folders and files for code coverage***" />
         <delete quiet="true" dir="${general.test.result.dir}" />
         <mkdir dir="${general.test.result.dir}" />
         <delete quiet="true" dir="${general.junit.result.dir}" />

@@ -27,6 +27,12 @@
         	 	<fail message="Test solution Name not specified (property 'test.solution')"/>
         	 </then>
 		</if>
+
+        <!-- setup some default dirs -->
+        <echo level="info" message="*** Setting up folders and files for build***" />
+        <delete quiet="true" dir="${general.log_dir}" />
+        <mkdir dir="${general.log_dir}" />
+
         <!--
 		<script language="javascript"><![CDATA[
 			var TEST_SUFFIX = '_test'
