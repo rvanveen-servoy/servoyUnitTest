@@ -84,13 +84,23 @@
     	        <isset property="texport.failed"/>
     	    </not>
     	    <then>
-                <antcall target="move_war_exports"/>
+                <antcall target="deploy_war_exports"/>
             </then>
         </if>
     </target>
 
-	<target name="move_war_exports">
+	<target name="deploy_war_exports">
+        <!--
+            <get src="http://localhost:${env.WEB_SERVER_PORT}/manager/text/stop?path=/${web.application.name}" username="jenkins" password="jenkins" dest="${log.dir}/war_undeploy.log" />
+            <get src="http://localhost:${env.WEB_SERVER_PORT}/manager/text/undeploy?path=/${web.application.name}" username="jenkins" password="jenkins" dest="${log.dir}/war_undeploy.log" />
+            <get src="http://localhost:${env.WEB_SERVER_PORT}/manager/text/deploy?path=/${web.application.name}&amp;war=${war.staging.dir}/${war.name}" username="jenkins" password="jenkins" dest="${log.dir}/war_deploy.log" />
+            <loadfile property="war_deploy_log" srcfile="${log.dir}/war_deploy.log"/>
+            <condition property="war_deploy.success">
+                <matches pattern="OK.*" string="${war_deploy_log}"/>
+            </condition> -->
+
 	  <copy file="${war_file}" todir="${war_dest_dir}"/>
+      <sleep seconds="30"/>
 	</target>
     <target name="collect_logs">
     	<!-- Move workspace log to build/logs directory -->
