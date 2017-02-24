@@ -90,17 +90,16 @@
     </target>
 
 	<target name="deploy_war_exports">
-        <!--
-            <get src="http://localhost:${env.WEB_SERVER_PORT}/manager/text/stop?path=/${web.application.name}" username="jenkins" password="jenkins" dest="${log.dir}/war_undeploy.log" />
-            <get src="http://localhost:${env.WEB_SERVER_PORT}/manager/text/undeploy?path=/${web.application.name}" username="jenkins" password="jenkins" dest="${log.dir}/war_undeploy.log" />
-            <get src="http://localhost:${env.WEB_SERVER_PORT}/manager/text/deploy?path=/${web.application.name}&amp;war=${war.staging.dir}/${war.name}" username="jenkins" password="jenkins" dest="${log.dir}/war_deploy.log" />
-            <loadfile property="war_deploy_log" srcfile="${log.dir}/war_deploy.log"/>
+            <get src="http://${tomcat.server.address}:${tomcat.server.port}/manager/text/stop?path=/${tomcat.application.name}" username="${tomcat.username}" password="${tomcat.password}" dest="${general.log_dir}/war_undeploy.log" />
+            <get src="http://${tomcat.server.address}:${tomcat.server.port}/manager/text/undeploy?path=/${tomcat.application.name}" username="${tomcat.username}" password="${tomcat.password}" dest="${general.log_dir}/war_undeploy.log" />
+            <get src="http://${tomcat.server.address}:${tomcat.server.port}/manager/text/deploy?path=/${tomcat.application.name}&amp;war=${general.output_dir}/${war_file}" username="${tomcat.username}" password="${tomcat.password}" dest="${general.log_dir}/war_deploy.log" />
+            <loadfile property="war_deploy_log" srcfile="${general.log_dir}/war_deploy.log"/>
             <condition property="war_deploy.success">
                 <matches pattern="OK.*" string="${war_deploy_log}"/>
-            </condition> -->
+            </condition>
 
-	  <copy file="${war_file}" todir="${war_dest_dir}"/>
-      <sleep seconds="30"/>
+	  <!-- <copy file="${war_file}" todir="${war_dest_dir}"/>
+      <sleep seconds="30"/> -->
 	</target>
     <target name="collect_logs">
     	<!-- Move workspace log to build/logs directory -->
