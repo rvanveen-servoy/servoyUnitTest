@@ -23,27 +23,33 @@
 
         <echo level="verbose" message="Using antRunner dir: ${general.antRunner.dir}"/>
         <echo level="info" message="*** Setting up folders and files ***" />
-        <delete dir="${general.test.result.dir}" />
+        <delete quiet="true" dir="${general.test.result.dir}" />
         <mkdir dir="${general.test.result.dir}" />
-        <delete dir="${general.junit.result.dir}" />
+        <delete quiet="true" dir="${general.junit.result.dir}" />
         <mkdir dir="${general.junit.result.dir}" />
-        <delete dir="$${general.istanbul.result.dir}" />
+        <delete quiet="true" dir="$${general.istanbul.result.dir}" />
         <mkdir dir="${general.istanbul.result.dir}" />
 
 
-        <delete dir="${code.coverage.temp.dir}"/>
+        <delete quiet="true" dir="${code.coverage.temp.dir}"/>
         <mkdir dir="${code.coverage.temp.dir}"/>
-        <delete dir="${general.istanbul.result.dir}"/>
+        <delete quiet="true" dir="${general.istanbul.result.dir}"/>
         <mkdir dir="${general.istanbul.result.dir}"/>
 
-        <delete dir="${code.coverage.instrumented.dir}"/>
+        <delete quiet="true" dir="${code.coverage.instrumented.dir}"/>
         <copy todir="${code.coverage.instrumented.dir}">
             <fileset dir="${WORKSPACE}">
             </fileset>
         </copy>
 
-        <delete dir="${code.coverage.instrumented.dir}/jenkins-build"/>
-        <delete dir="${code.coverage.instrumented.dir}/e2e-tests"/>
+        <for list="${code.coverage.instrument.exclude}" param="instrumentExclude">
+            <sequential>
+                <delete dir="${code.coverage.instrumented.dir}/@{instrumentExclude}"/>
+            </sequential>
+        </for>
+
+        <delete quiet="true" dir="${code.coverage.instrumented.dir}/jenkins-build"/>
+        <delete quiet="true" dir="${code.coverage.instrumented.dir}/e2e-tests"/>
 
     </target>
 
