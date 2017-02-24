@@ -101,10 +101,10 @@
             <get src="http://${tomcat.server.address}:${tomcat.server.port}/manager/text/deploy?path=/${tomcat.application.name}&amp;war=${war_file}" username="${tomcat.username}" password="${tomcat.password}" dest="${general.log_dir}/war_deploy.log" />
             <loadfile property="war_deploy_log" srcfile="${general.log_dir}/war_deploy.log"/>
             <condition property="war_deploy.success">
-                <matches pattern="OK.*" string="${general.log_dir}/war_deploy.log"/>
+                <matches pattern="OK.*" string="${war_deploy_log}"/>
             </condition>
 
-            <fail unless="war_deploy.success" message="Auto deploy of warfile failed"/>
+            <fail message="War deployment failed" unless="war_deploy.success" />
 
 	  <!-- <copy file="${war_file}" todir="${war_dest_dir}"/>
       <sleep seconds="30"/> -->
