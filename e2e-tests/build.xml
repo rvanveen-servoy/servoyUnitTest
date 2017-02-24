@@ -73,9 +73,7 @@
 		    <echo message="Run tests script started"/>
 			<echo message="Testing solution: ${solution.name}"/>
 
-		<exec executable="cmd" dir="${basedir}" osfamily="windows" failonerror="true">
-					<arg value="/c"/>
-					<arg value="node_modules\.bin\protractor"/>
+		<exec executable="protractor.cmd" dir="${basedir}" osfamily="windows" failonerror="true">
 					<arg value="${protractor.conf}"/>
 					<arg value="--params.solutionName=${solution.name}"/>
 		</exec>
