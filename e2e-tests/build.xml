@@ -80,12 +80,12 @@
 					<arg value="--params.solutionName=${solution.name}"/>
 		</exec>
 
-		<property name="temp1" value="node ./node_modules/.bin/protractor --troubleshoot true ${protractor.conf} --params.solutionName=${solution.name}"/>
+		<!--<property name="temp1" value="node ./node_modules/.bin/protractor --troubleshoot true ${protractor.conf} --params.solutionName=${solution.name}"/>
 		<exec executable="bash" dir="${basedir}" osfamily="unix"
 							failonerror="true">
 			                <arg value="-c"/>
 							<arg value="${temp1}"/>
-		</exec>
+		</exec> -->
 	</target>
 
 
