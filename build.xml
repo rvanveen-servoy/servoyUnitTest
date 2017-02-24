@@ -98,11 +98,18 @@
 	<target name="deploy_war_exports">
             <get src="http://${tomcat.server.address}:${tomcat.server.port}/manager/text/stop?path=/${tomcat.application.name}" username="${tomcat.username}" password="${tomcat.password}" dest="${general.log_dir}/war_undeploy.log" />
             <get src="http://${tomcat.server.address}:${tomcat.server.port}/manager/text/undeploy?path=/${tomcat.application.name}" username="${tomcat.username}" password="${tomcat.password}" dest="${general.log_dir}/war_undeploy.log" />
-            <get src="http://${tomcat.server.address}:${tomcat.server.port}/manager/text/deploy?path=/${tomcat.application.name}&amp;war=${general.output_dir}/${war_file}" username="${tomcat.username}" password="${tomcat.password}" dest="${general.log_dir}/war_deploy.log" />
+            <get src="http://${tomcat.server.address}:${tomcat.server.port}/manager/text/deploy?path=/${tomcat.application.name}&amp;war=${war_file}" username="${tomcat.username}" password="${tomcat.password}" dest="${general.log_dir}/war_deploy.log" />
             <loadfile property="war_deploy_log" srcfile="${general.log_dir}/war_deploy.log"/>
             <condition property="war_deploy.success">
                 <matches pattern="OK.*" string="${war_deploy_log}"/>
             </condition>
+
+            <if>
+                 <equals arg1="${war_deploy.success}" arg2="true"/>
+                 <then>
+                    <fail message="Auto deploy of warfile failed"/>
+                 </then>
+            </if>
 
 	  <!-- <copy file="${war_file}" todir="${war_dest_dir}"/>
       <sleep seconds="30"/> -->
