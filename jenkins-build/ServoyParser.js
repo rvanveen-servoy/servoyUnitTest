@@ -287,6 +287,7 @@ function isFileExcluted(fileName) {
 		return false;
 	}
 	return EXCLUDES.hasOwnProperty(fileName)
+
 }
 
 /**
@@ -303,33 +304,8 @@ function isFileIncluted(filePath) {
 		}
 	}
 	return false
+	//return true;
 }
-
-/*
- * process all js files.
- *
- function readWorkspaceJSFileList() {
-
- for (var i=0; i<workspaceFilesJS.length; i++) {
- var inFilePath = workspaceFilesJS[i];
- var outFilePath = WORKSPACE_PATH + inFilePath.substring(TEMP_WORKSPACE.length);
- log('processing file: ' + outFilePath);
-
- // TODO bad performance. read all file in once.
- // copy the content into a different file.
- fs.readFile(inFilePath, {flags:"r", encoding: 'utf8', mode: 0666}, function (err, data) {
- if (err) {
- return log(err)
- }
- fs.writeFile(outFilePath, parseData(data), {flags:"w", encoding: 'utf8', mode: 0666}, function (wErr) {
- if(wErr) {
- log('ERROR IN WRITE FILE ' + wErr);
- }
- });
- });
- }
- }
- */
 
 function readWorkspaceJSFileList() {
 
@@ -449,7 +425,6 @@ function extractInstrumentedData(data) {
 		// throw new Error('File not instrumented')
 	}
 	return ""
-
 }
 
 ///**
@@ -498,7 +473,7 @@ function removeInstrumentedData(data) {
 		parsedData = parsedData.replace(LEFT_CONTENT, '\n/**\n * @properties={typeid:35,uuid:"' + generateUUID() + '"} \n */\nvar istanbul_init = (function (){ ' + LEFT_CONTENT)
 		return parsedData
 	} else {
-		//throw new Error('File not instrumented')
+		throw new Error('File not instrumented')
 	}
 	return data;
 }
