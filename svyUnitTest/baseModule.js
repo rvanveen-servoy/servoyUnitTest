@@ -16,8 +16,8 @@ function onSolutionOpen(arg, queryParams) {
         scopes.istanbul_scope.initIstanbul();
     } catch (e) {
         // This is only useful for debugging in the CI pipeline. Else it is just really annoying when running tests locally
-        // application.output('cannot init istanbul_scope');
-        // application.output(e);
+        application.output('cannot init istanbul_scope');
+        application.output(e);
     }
 }
 
@@ -40,7 +40,7 @@ function onSolutionClose(force) {
         }
     } catch (e) {
         // This is only useful for debugging in the CI pipeline. Else it is just really annoying when running tests locally
-        // application.output('__coverage__ is not defined');
+        application.output('__coverage__ is not defined');
     }
 
     if (coverageExists) {
