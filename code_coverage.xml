@@ -52,7 +52,7 @@
         <delete quiet="true" dir="${code.coverage.instrumented.dir}/e2e-tests"/>
 
         <replace file="${code.coverage.instrumented.dir}/${servoy.test_solution_name}/baseModule.js" token="___report_coverage___" value="${general.istanbul.result.dir}/coverage.json"/>
-
+        <replace file="${code.coverage.instrumented.dir}/${servoy.test_solution_name}/baseModule.js" token="\" value="/"/>
 
     </target>
 
