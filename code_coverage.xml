@@ -50,7 +50,7 @@
 
         <delete quiet="true" dir="${code.coverage.instrumented.dir}/jenkins-build"/>
         <delete quiet="true" dir="${code.coverage.instrumented.dir}/e2e-tests"/>
-        
+
         <replace file="${code.coverage.instrumented.dir}/${servoy.test_solution_name}/baseModule.js" token="___report_coverage___" value="${general.istanbul.result.dir}/coverage.json"/>
 
 
@@ -62,7 +62,7 @@
       <echo level="info" message="Excluded by configuration : ${code.coverage.exclude}"/>
       <exec executable="istanbul.cmd" failonerror="${code.coverage.failOnError}">
         <arg value="instrument"/>
-        <arg value="${code.coverage.instrumented.dir}"/> a
+        <arg value="${code.coverage.instrumented.dir}"/>
         <arg value="--output"/>
           <arg value="${code.coverage.temp.dir}"/>
         <arg value="--preserve-comments"/>
