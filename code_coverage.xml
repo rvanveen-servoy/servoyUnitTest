@@ -80,8 +80,8 @@
           <arg value="node"/>
           <arg value="${JENKINS-BUILD}/ServoyParser.js"/>
           <arg value="--d"/>
-          <arg value="${code.coverage.temp.dir}"/>
           <arg value="${code.coverage.instrumented.dir}"/>
+          <arg value="${code.coverage.temp.dir}"/>
           <arg value="--t"/>
             <arg value="${servoy.test_solution_name}"/>
           <arg value="--x"/>
